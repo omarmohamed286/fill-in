@@ -3,12 +3,17 @@
 @theme {
   --color-primary: #0f1624;
   --color-secondary: #88f7f1;
+  --color-light-cyan: #92e7db;
   --font-elms: "Elms Sans", sans-serif;
   --font-raleway: "Raleway", sans-serif;
 }
 
 @layer base {
   body {
-    @apply min-h-screen bg-primary font-raleway;
+    @apply min-h-screen bg-primary font-raleway text-white;
   }
+}
+
+button:not(:disabled) {
+  cursor: pointer;
 }
