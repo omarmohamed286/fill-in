@@ -4,6 +4,9 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import GoogleLogo from "../components/auth/GoogleLogo";
 import ContinueWithDivider from "../components/auth/ContinueWithDivider";
 import ShowPasswordIcon from "../components/auth/ShowPasswordIcon";
+import Loading from "../components/shared/Loading";
+import { useGoogleSignIn } from "../hooks/auth/useGoogleSignIn";
+import { useRegister } from "../hooks/auth/useRegister";
 
 type RegisterInput = {
   email: string;
@@ -20,9 +23,23 @@ export default function Register() {
     formState: { errors },
   } = useForm<RegisterInput>();
   const password = watch("password");
+  const { isPending, mutate, error } = useRegister();
+  const {
+    isPending: isGooglePending,
+    mutate: googleMutate,
+    error: googleError,
+  } = useGoogleSignIn();
 
   const onSubmit: SubmitHandler<RegisterInput> = (data) => {
-    console.log(data);
+    const { email, password } = data;
+    mutate({
+      email: email,
+      password: password,
+    });
+  };
+
+  const handleGoogleSignIn = () => {
+    googleMutate();
   };
 
   return (
@@ -122,17 +139,27 @@ export default function Register() {
             </div>
             <button
               type="submit"
-              className="w-full px-6 py-3 bg-secondary text-primary font-bold rounded-lg hover:bg-light-cyan transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-secondary/20 mt-6"
+              disabled={isPending}
+              className="w-full px-6 py-3 bg-secondary text-primary font-bold rounded-lg hover:bg-light-cyan transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-secondary/20"
             >
-              Register
+              {isPending ? <Loading></Loading> : "Register"}
             </button>
+            {error && <p className="text-rose-400">{error.message}</p>}
           </div>
           <ContinueWithDivider></ContinueWithDivider>
           <div className="flex justify-center">
-            <button className="px-6 py-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center justify-center gap-2">
+            <button
+              onClick={handleGoogleSignIn}
+              disabled={isGooglePending}
+              type="button"
+              className="px-6 py-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center justify-center gap-2"
+            >
               <GoogleLogo></GoogleLogo>
               <span className="text-sm font-medium text-white">Google</span>
             </button>
+            {googleError && (
+              <p className="text-rose-400 mt-2">{googleError.message}</p>
+            )}
           </div>
           <p className="text-center text-sm text-white/60 mt-6">
             Already have an account?{" "}
