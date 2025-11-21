@@ -14,6 +14,12 @@
   }
 }
 
+@layer components {
+  .auth-heading-btn {
+    @apply text-center text-3xl mb-8 font-black bg-linear-to-r from-white via-light-cyan to-secondary bg-clip-text text-transparent
+  }
+}
+
 button:not(:disabled) {
   cursor: pointer;
 }
