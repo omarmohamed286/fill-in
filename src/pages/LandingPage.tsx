@@ -5,9 +5,6 @@ import Home from "./Home";
 const LandingPage = () => {
   const { user, userStatus } = useContext(UserDataContext);
   if (!user && userStatus != "loading") {
-    if (userStatus == "error") {
-      return <p className="text-rose-400">Werid Error Happened!</p>;
-    }
     return (
       <main className="relative min-h-screen flex items-center justify-center px-6 py-20 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden *:absolute *:w-96 *:h-96 *:rounded-full *:blur-3xl *:top-1/4">

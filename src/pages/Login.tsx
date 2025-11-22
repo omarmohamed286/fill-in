@@ -4,6 +4,9 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import GoogleLogo from "../components/auth/GoogleLogo";
 import ContinueWithDivider from "../components/auth/ContinueWithDivider";
 import ShowPasswordIcon from "../components/auth/ShowPasswordIcon";
+import { useLogin } from "../hooks/auth/useLogin";
+import { useGoogleSignIn } from "../hooks/auth/useGoogleSignIn";
+import Loading from "../components/shared/Loading";
 
 type LoginInput = {
   email: string;
@@ -17,9 +20,20 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginInput>();
+  const { isPending, mutate, error } = useLogin();
+  const {
+    isPending: isGooglePending,
+    mutate: googleMutate,
+    error: googleError,
+  } = useGoogleSignIn();
 
   const onSubmit: SubmitHandler<LoginInput> = (data) => {
-    console.log(data);
+    const { email, password } = data;
+    mutate({ email, password });
+  };
+
+  const handleGoogleSignIn = () => {
+    googleMutate();
   };
 
   return (
@@ -94,17 +108,27 @@ export default function Login() {
             </div>
             <button
               type="submit"
+              disabled={isPending}
               className="w-full px-6 py-3 bg-secondary text-primary font-bold rounded-lg hover:bg-light-cyan transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-secondary/20 mt-2"
             >
-              Login
+              {isPending ? <Loading></Loading> : "Login"}
+              {error && <p className="text-rose-400">{error.message}</p>}
             </button>
           </div>
           <ContinueWithDivider></ContinueWithDivider>
           <div className="flex justify-center">
-            <button className="px-6 py-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center justify-center gap-2">
+            <button
+              type="button"
+              onClick={handleGoogleSignIn}
+              disabled={isGooglePending}
+              className="px-6 py-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all duration-300 flex items-center justify-center gap-2"
+            >
               <GoogleLogo></GoogleLogo>
               <span className="text-sm font-medium text-white">Google</span>
             </button>
+            {googleError && (
+              <p className="text-rose-400 mt-2">{googleError.message}</p>
+            )}
           </div>
           <p className="text-center text-sm text-white/60 mt-6">
             Don't have an account?{" "}
