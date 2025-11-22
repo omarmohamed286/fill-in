@@ -6,7 +6,7 @@ import {
   signInWithPopup,
   type UserCredential,
 } from "firebase/auth";
-import { auth } from "./config";
+import { auth } from "@shared/firebaseConfig";
 
 export const authService = {
   register: async (

@@ -1,0 +1,12 @@
+{
+  "name": "my-monorepo",
+  "private": true,
+  "workspaces": [
+    "client",
+    "admin",
+    "shared"
+  ],
+  "devDependencies": {
+    "vite-tsconfig-paths": "^5.1.4"
+  }
+}

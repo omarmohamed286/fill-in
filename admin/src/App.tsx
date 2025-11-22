@@ -1,7 +1,12 @@
+import AddCategoryForm from "./components/AddCategoryForm";
+import AddLessonForm from "./components/AddLessonForm";
 const App = () => {
   return (
-    <div>App</div>
-  )
-}
+    <>
+      <AddCategoryForm></AddCategoryForm>
+      <AddLessonForm></AddLessonForm>
+    </>
+  );
+};
 
-export default App
+export default App;
