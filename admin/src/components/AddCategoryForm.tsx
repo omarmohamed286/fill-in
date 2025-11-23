@@ -54,14 +54,13 @@ export default function AddCategoryForm() {
             </label>
             <input
               id="categoryImg"
-              type="text"
+              type="url"
               value={categoryImg}
               onChange={(e) => setCategoryImg(e.target.value)}
               className="bg-primary border border-secondary/30 rounded-md px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
               placeholder="Enter image URL"
             />
           </div>
-
           <button
             type="submit"
             disabled={isPending}

@@ -11,4 +11,13 @@ type Lesson = {
   createdAt: number;
 };
 
-export type { Lesson, Category };
+type Question = {
+  id: string;
+  lessonId: string;
+  title: string;
+  choices: string[];
+  answer: string;
+  externalResources: string[];
+};
+
+export type { Lesson, Category, Question };
