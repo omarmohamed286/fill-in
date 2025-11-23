@@ -1,25 +1,21 @@
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
-import useGetCategories from "@shared/hooks/categories/useGetCategories";
+import { useState, type FormEvent } from "react";
+import { useCategorySelect } from "../hooks/categories/useCategorySelect";
 import useAddLesson from "src/hooks/lessons/useAddLesson";
+import SelectCategory from "./SelectCategory";
 
 const AddLessonForm = () => {
   const [lessonName, setLessonName] = useState("");
-  const { isPending, data, error } = useGetCategories();
-  const [categoryId, setCategoryId] = useState("");
   const { isPending: isLessonPending, mutate } = useAddLesson();
-  console.log(data);
+  const {
+    isPending,
+    data,
+    error,
+    onCategorySelect,
+    categoryId,
+    setCategoryId,
+  } = useCategorySelect();
 
-  useEffect(() => {
-    if (data && data.length > 0) {
-      setCategoryId(data[0].id);
-    }
-  }, [data]);
-
-  console.log("IDDDD", categoryId);
-
-  const onCategorySelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    console.log(e.target.value);
-  };
+  const selectCategoryProps = { isPending, data, error, onCategorySelect };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -45,30 +41,7 @@ const AddLessonForm = () => {
         </p>
 
         <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="category"
-              className="text-sm font-medium text-light-cyan"
-            >
-              Category
-            </label>
-            {isPending ? (
-              <p>Loading...</p>
-            ) : (
-              <select
-                id="category"
-                onChange={onCategorySelect}
-                className="text-black"
-              >
-                {data?.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-            )}
-          </div>
-
+          <SelectCategory {...selectCategoryProps}></SelectCategory>
           <div className="flex flex-col gap-2">
             <label
               htmlFor="lessonName"
@@ -93,10 +66,6 @@ const AddLessonForm = () => {
           >
             {isLessonPending ? "Adding..." : "Add Lesson"}
           </button>
-
-          {error && (
-            <p className="text-sm text-center text-red-400">{error.message}</p>
-          )}
         </form>
       </div>
     </div>
