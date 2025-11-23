@@ -1,38 +1,40 @@
-import { useState, type FormEvent } from "react";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "@shared/firebaseConfig";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import useGetCategories from "@shared/hooks/categories/useGetCategories";
+import useAddLesson from "src/hooks/lessons/useAddLesson";
 
 const AddLessonForm = () => {
-  const [category, setCategory] = useState("");
   const [lessonName, setLessonName] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState("");
+  const { isPending, data, error } = useGetCategories();
+  const [categoryId, setCategoryId] = useState("");
+  const { isPending: isLessonPending, mutate } = useAddLesson();
+  console.log(data);
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setCategoryId(data[0].id);
+    }
+  }, [data]);
+
+  console.log("IDDDD", categoryId);
+
+  const onCategorySelect = (e: ChangeEvent<HTMLSelectElement>) => {
+    console.log(e.target.value);
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
-    if (!category.trim() || !lessonName.trim()) {
-      setMessage("Please fill in all fields");
+    if (!categoryId.trim() || !lessonName.trim()) {
       return;
     }
-
-    setIsSubmitting(true);
-    setMessage("");
-
-    try {
-      await addDoc(collection(db, `categories/${category}/lessons`), {
+    mutate({
+      categoryId,
+      lesson: {
         name: lessonName,
-        createdAt: new Date(),
-      });
-
-      setMessage("Lesson added successfully!");
-      setCategory("");
-      setLessonName("");
-    } catch (error) {
-      setMessage("Error adding category: " + error);
-    } finally {
-      setIsSubmitting(false);
-    }
+        createdAt: Date.now(),
+      },
+    });
+    setCategoryId("");
+    setLessonName("");
   };
 
   return (
@@ -50,14 +52,21 @@ const AddLessonForm = () => {
             >
               Category
             </label>
-            <input
-              id="category"
-              type="text"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="bg-primary border border-secondary/30 rounded-md px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
-              placeholder="Enter category"
-            />
+            {isPending ? (
+              <p>Loading...</p>
+            ) : (
+              <select
+                id="category"
+                onChange={onCategorySelect}
+                className="text-black"
+              >
+                {data?.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
 
           <div className="flex flex-col gap-2">
@@ -79,20 +88,14 @@ const AddLessonForm = () => {
 
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isLessonPending}
             className="mt-4 bg-secondary text-primary font-bold py-3 px-6 rounded-md hover:bg-light-cyan transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? "Adding..." : "Add Lesson"}
+            {isLessonPending ? "Adding..." : "Add Lesson"}
           </button>
 
-          {message && (
-            <p
-              className={`text-sm text-center ${
-                message.includes("Error") ? "text-red-400" : "text-secondary"
-              }`}
-            >
-              {message}
-            </p>
+          {error && (
+            <p className="text-sm text-center text-red-400">{error.message}</p>
           )}
         </form>
       </div>

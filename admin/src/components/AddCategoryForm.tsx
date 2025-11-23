@@ -1,39 +1,23 @@
 import { useState, type FormEvent } from "react";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "@shared/firebaseConfig";
+import useAddCategory from "../hooks/categories/useAddCategory";
 
 export default function AddCategoryForm() {
   const [categoryName, setCategoryName] = useState("");
   const [categoryImg, setCategoryImg] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState("");
+  const { mutate, isPending, error } = useAddCategory();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
     if (!categoryName.trim() || !categoryImg.trim()) {
-      setMessage("Please fill in all fields");
       return;
     }
-
-    setIsSubmitting(true);
-    setMessage("");
-
-    try {
-      await addDoc(collection(db, "categories"), {
-        name: categoryName,
-        image: categoryImg,
-        createdAt: new Date(),
-      });
-
-      setMessage("Category added successfully!");
-      setCategoryName("");
-      setCategoryImg("");
-    } catch (error) {
-      setMessage("Error adding category: " + error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    mutate({
+      name: categoryName,
+      image: categoryImg,
+      createdAt: Date.now(),
+    });
+    setCategoryName("");
+    setCategoryImg("");
   };
 
   return (
@@ -80,19 +64,15 @@ export default function AddCategoryForm() {
 
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isPending}
             className="mt-4 bg-secondary text-primary font-bold py-3 px-6 rounded-md hover:bg-light-cyan transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? "Adding..." : "Add Category"}
+            {isPending ? "Adding..." : "Add Category"}
           </button>
 
-          {message && (
-            <p
-              className={`text-sm text-center ${
-                message.includes("Error") ? "text-red-400" : "text-secondary"
-              }`}
-            >
-              {message}
+          {error && (
+            <p className={"text-sm text-center text-red-400"}>
+              {error.message}
             </p>
           )}
         </form>
