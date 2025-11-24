@@ -1,6 +1,6 @@
 import { useState, useEffect, type PropsWithChildren } from "react";
 import { type User, onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../utils/config";
+import { auth } from "@shared/firebaseConfig";
 import {
   UserDataContext,
   type RequestState,

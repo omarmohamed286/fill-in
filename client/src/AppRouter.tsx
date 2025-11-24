@@ -4,6 +4,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UserDataProvider from "./components/auth/UserDataProvider";
 import RedirectToHome from "./components/auth/RedirectToHome";
+import Lessons from "./pages/Lessons";
+import NotFound from "./pages/NotFound";
 
 const AppRouter = () => {
   return (
@@ -27,6 +29,11 @@ const AppRouter = () => {
               </RedirectToHome>
             }
           ></Route>
+          <Route
+            path="/category/:categoryId"
+            element={<Lessons></Lessons>}
+          ></Route>
+          <Route path="*" element={<NotFound />}></Route>
         </Routes>
       </BrowserRouter>
     </UserDataProvider>
