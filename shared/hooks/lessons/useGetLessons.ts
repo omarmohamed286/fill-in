@@ -3,7 +3,7 @@ import { type Lesson } from "../../customTypes";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 
-const useGetLessons = (categoryId: string) => {
+const useGetLessons = (categoryId?: string) => {
   const { isPending, data, error } = useQuery({
     queryKey: ["lessons", categoryId],
     queryFn: categoryId
