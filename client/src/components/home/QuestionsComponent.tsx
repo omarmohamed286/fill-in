@@ -4,6 +4,8 @@ import { useState } from "react";
 import QuestionsProgressBar from "./QuestionsProgressBar";
 import { useNavigate } from "react-router";
 import { CodeBlock } from "./CodeBlock";
+import CorrectAnswerIcon from "./CorrectAnswerIcon";
+import IncorrectAnswerIcon from "./IncorrectAnswerIcon";
 
 type QuestionsComponent = {
   questions: Question[];
@@ -15,6 +17,7 @@ const QuestionsComponent = ({ questions }: QuestionsComponent) => {
   const currentQuestion = questions[currentQuestionIndex];
   const [isSubmitted, setIsSubmitted] = useState(false);
   const isLastQuestion = currentQuestionIndex + 1 == questions.length;
+  const isCorrectAnswer = userAnswer == currentQuestion.answer;
   const navigate = useNavigate();
 
   const handleAnswerClicked = (answer: string) => {
@@ -91,11 +94,39 @@ const QuestionsComponent = ({ questions }: QuestionsComponent) => {
                 isSubmitted ? "cursor-default" : "cursor-pointer"
               )}
             >
-              <span className="text-white font-medium">{choice}</span>
+              <span className="text-white font-medium">
+                <div className="flex items-center justify-between">
+                  <span className="text-white font-medium">{choice}</span>
+                  {isSubmitted && isThisCorrect && (
+                    <CorrectAnswerIcon></CorrectAnswerIcon>
+                  )}
+                  {isSubmitted && isThisIncorrect && (
+                    <IncorrectAnswerIcon></IncorrectAnswerIcon>
+                  )}
+                </div>
+              </span>
             </button>
           );
         })}
       </div>
+      {isSubmitted && (
+        <div
+          className={clsx("mb-6 p-4 rounded-lg border", {
+            "bg-green-500/10 border-green-500/30": isCorrectAnswer,
+            "bg-red-500/10 border-red-500/30": !isCorrectAnswer,
+          })}
+        >
+          <p
+            className={clsx("font-medium", {
+              "text-green-400": isCorrectAnswer,
+              "text-red-400": !isCorrectAnswer,
+            })}
+          >
+            {isCorrectAnswer ? "✓ Correct!" : "✗ Incorrect"}
+          </p>
+        </div>
+      )}
+
       <button
         disabled={!userAnswer}
         onClick={handleSubmitClicked}
