@@ -11,7 +11,9 @@ const AddQuestionForm = () => {
     title: "",
     answer: "",
     choices: [""],
-    externalResources: [""],
+    explanation: "",
+    code: "",
+    externalResources: [{ id: crypto.randomUUID().slice(0,4), title: "", url: "" }],
   });
   const [lessonId, setLessonId] = useState("");
   const {
@@ -60,7 +62,9 @@ const AddQuestionForm = () => {
       title: "",
       answer: "",
       choices: [""],
-      externalResources: [""],
+      explanation: "",
+      code: "",
+      externalResources: [{ id: crypto.randomUUID().slice(0,4), title: "", url: "" }],
     });
   };
 
@@ -86,16 +90,19 @@ const AddQuestionForm = () => {
     setQuestion({ ...question, choices: newChoices });
   };
 
-  const updateResource = (index: number, value: string) => {
+  const updateResource = (index: number, field: 'title' | 'url', value: string) => {
     const newResources = [...(question.externalResources || [])];
-    newResources[index] = value;
+    newResources[index] = { ...newResources[index], [field]: value };
     setQuestion({ ...question, externalResources: newResources });
   };
 
   const addResource = () => {
     setQuestion({
       ...question,
-      externalResources: [...(question.externalResources || []), ""],
+      externalResources: [
+        ...(question.externalResources || []),
+        { id: crypto.randomUUID().slice(0,4), title: "", url: "" }
+      ],
     });
   };
 
@@ -107,8 +114,8 @@ const AddQuestionForm = () => {
   };
 
   return (
-    <div className=" flex justify-center my-10">
-      <div className="w-full max-w-md bg-[#1a2332] rounded-lg shadow-2xl p-8 border border-secondary/20">
+    <div className="flex justify-center my-10">
+      <div className="w-full max-w-2xl bg-[#1a2332] rounded-lg shadow-2xl p-8 border border-secondary/20">
         <p className="text-2xl font-elms font-bold text-secondary mb-6">
           Add New Question
         </p>
@@ -116,49 +123,56 @@ const AddQuestionForm = () => {
         <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
           <SelectCategory {...selectCategoryProps}></SelectCategory>
           <SelectLesson {...selectLessonProps}></SelectLesson>
-          <label
-            htmlFor="title"
-            className="text-sm font-medium text-light-cyan"
-          >
-            Title
-          </label>
-          <input
-            type="text"
-            id="title"
-            value={question.title}
-            placeholder="Title"
-            className="bg-primary border border-secondary/30 rounded-md px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
-            onChange={(e) => {
-              setQuestion({ ...question, title: e.target.value });
-            }}
-          />
-          <label
-            htmlFor="answer"
-            className="text-sm font-medium text-light-cyan"
-          >
-            Answer
-          </label>
-          <input
-            type="text"
-            id="answer"
-            value={question.answer}
-            placeholder="Answer"
-            className="bg-primary border border-secondary/30 rounded-md px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
-            onChange={(e) => {
-              setQuestion({ ...question, answer: e.target.value });
-            }}
-          />
+
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="title"
+              className="text-sm font-medium text-light-cyan"
+            >
+              Question Title
+            </label>
+            <input
+              type="text"
+              id="title"
+              value={question.title}
+              placeholder="Enter your question"
+              className="bg-primary border border-secondary/30 rounded-md px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
+              onChange={(e) => {
+                setQuestion({ ...question, title: e.target.value });
+              }}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="code"
+              className="text-sm font-medium text-light-cyan"
+            >
+              Code (Optional)
+            </label>
+            <textarea
+              id="code"
+              value={question.code}
+              placeholder="Paste code snippet here..."
+              rows={6}
+              className="bg-primary border border-secondary/30 rounded-md px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all font-mono text-sm resize"
+              onChange={(e) => {
+                setQuestion({ ...question, code: e.target.value });
+              }}
+            />
+          </div>
+
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium text-light-cyan">
-                Choices
+                Answer Choices
               </label>
               <button
                 type="button"
                 onClick={addChoice}
                 className="flex items-center gap-1 text-secondary hover:text-light-cyan transition-colors text-sm"
               >
-                Add Choice
+                + Add Choice
               </button>
             </div>
 
@@ -175,46 +189,102 @@ const AddQuestionForm = () => {
                   <button
                     type="button"
                     onClick={() => removeChoice(index)}
-                    className="text-red-400 hover:text-red-300 transition-colors"
+                    className="text-red-400 hover:text-red-300 transition-colors p-2"
+                    aria-label="Remove choice"
                   >
-                    <span>X</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                   </button>
                 )}
               </div>
             ))}
           </div>
+
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="answer"
+              className="text-sm font-medium text-light-cyan"
+            >
+              Correct Answer
+            </label>
+            <input
+              type="text"
+              id="answer"
+              value={question.answer}
+              placeholder="Enter the correct answer"
+              className="bg-primary border border-secondary/30 rounded-md px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
+              onChange={(e) => {
+                setQuestion({ ...question, answer: e.target.value });
+              }}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="explanation"
+              className="text-sm font-medium text-light-cyan"
+            >
+              Explanation (Optional)
+            </label>
+            <textarea
+              id="explanation"
+              value={question.explanation}
+              placeholder="Explain why this is the correct answer..."
+              rows={4}
+              className="bg-primary border border-secondary/30 rounded-md px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all resize-none"
+              onChange={(e) => {
+                setQuestion({ ...question, explanation: e.target.value });
+              }}
+            />
+          </div>
+
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium text-light-cyan">
-                External Resources
+                External Resources (Optional)
               </label>
               <button
                 type="button"
                 onClick={addResource}
                 className="flex items-center gap-1 text-secondary hover:text-light-cyan transition-colors text-sm"
               >
-                Add Resource
+                + Add Resource
               </button>
             </div>
 
-            {(question.externalResources || [""]).map((resource, index) => (
-              <div key={index} className="flex gap-2 items-center">
-                <input
-                  type="url"
-                  value={resource}
-                  placeholder={`Resource URL ${index + 1}`}
-                  className="flex-1 bg-primary border border-secondary/30 rounded-md px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
-                  onChange={(e) => updateResource(index, e.target.value)}
-                />
-                {(question.externalResources?.length || 0) > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeResource(index)}
-                    className="text-red-400 hover:text-red-300 transition-colors"
-                  >
-                    <span>X</span>
-                  </button>
-                )}
+            {(question.externalResources || []).map((resource, index) => (
+              <div key={resource.id} className="flex flex-col gap-2 p-4 bg-primary/50 border border-secondary/20 rounded-lg">
+                <div className="flex gap-2 items-start">
+                  <div className="flex-1 flex flex-col gap-2">
+                    <input
+                      type="text"
+                      value={resource.title}
+                      placeholder="Resource title"
+                      className="bg-primary border border-secondary/30 rounded-md px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
+                      onChange={(e) => updateResource(index, 'title', e.target.value)}
+                    />
+                    <input
+                      type="url"
+                      value={resource.url}
+                      placeholder="Resource URL"
+                      className="bg-primary border border-secondary/30 rounded-md px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
+                      onChange={(e) => updateResource(index, 'url', e.target.value)}
+                    />
+                  </div>
+                  {(question.externalResources?.length || 0) > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeResource(index)}
+                      className="text-red-400 hover:text-red-300 transition-colors p-2"
+                      aria-label="Remove resource"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -231,5 +301,6 @@ const AddQuestionForm = () => {
     </div>
   );
 };
+
 
 export default AddQuestionForm;

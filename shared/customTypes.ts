@@ -11,13 +11,21 @@ type Lesson = {
   createdAt: number;
 };
 
+type ExternalResource = {
+  id: string;
+  title: string;
+  url: string;
+};
+
 type Question = {
   id: string;
   lessonId: string;
   title: string;
   choices: string[];
   answer: string;
-  externalResources: string[];
+  explanation?: string;
+  code?: string;
+  externalResources: ExternalResource[];
 };
 
 export type { Lesson, Category, Question };
