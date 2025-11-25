@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { useState } from "react";
 import QuestionsProgressBar from "./QuestionsProgressBar";
 import { useNavigate } from "react-router";
+import { CodeBlock } from "./CodeBlock";
 
 type QuestionsComponent = {
   questions: Question[];
@@ -55,6 +56,13 @@ const QuestionsComponent = ({ questions }: QuestionsComponent) => {
       <header className="mb-8">
         <h1 className="text-2xl md:text-3xl font-bold text-white leading-relaxed">
           {currentQuestion.title}
+          {currentQuestion.code && (
+            <CodeBlock
+              code={currentQuestion.code}
+              language="tsx"
+              filename="App.tsx"
+            ></CodeBlock>
+          )}
         </h1>
       </header>
       <div className="space-y-3 mb-8">
