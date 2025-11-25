@@ -1,11 +1,13 @@
-import { Link, useParams } from "react-router";
+import { Link, useParams, useNavigate } from "react-router";
 import useGetQuestions from "@shared/hooks/questions/useGetQuestions";
 import Loading from "../components/shared/Loading";
 import QuestionsComponent from "../components/home/QuestionsComponent";
+import ExploreIcon from "src/components/home/ExploreIcon";
 
 const Questions = () => {
   const { categoryId, lessonId } = useParams();
   const { data, isPending, error } = useGetQuestions(categoryId, lessonId);
+  const navigate = useNavigate();
 
   if (isPending) {
     return <Loading variant="2"></Loading>;
@@ -36,7 +38,18 @@ const Questions = () => {
   }
 
   return (
-    <main className="min-h-screen flex justify-center items-center px-6">
+    <main className="min-h-screen flex flex-col justify-center items-center px-6">
+      <button
+        className="inline-flex items-center gap-2 text-light-cyan hover:text-secondary transition-colors duration-300 mb-8"
+        onClick={() => {
+          navigate(-1);
+        }}
+      >
+        <span className="rotate-180">
+          <ExploreIcon></ExploreIcon>
+        </span>
+        Back to Lesson
+      </button>
       <QuestionsComponent questions={data}></QuestionsComponent>
     </main>
   );

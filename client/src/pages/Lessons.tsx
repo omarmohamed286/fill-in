@@ -1,10 +1,15 @@
-import { useParams, Link } from "react-router";
+import { useParams, Link, useLocation } from "react-router";
 import useGetLessons from "@shared/hooks/lessons/useGetLessons";
 import Loading from "../components/shared/Loading";
 import ExploreIcon from "../components/home/ExploreIcon";
+import type { Category } from "@shared/customTypes";
 const Lessons = () => {
   const { categoryId } = useParams();
   const { data, isPending, error } = useGetLessons(categoryId);
+  const location = useLocation();
+  const locationState = location.state as { category: Category };
+  const { category } = locationState;
+
   return (
     <main className="min-h-screen pt-20 pb-16 px-6">
       <div className="max-w-5xl mx-auto">
@@ -19,7 +24,7 @@ const Lessons = () => {
         </Link>
         <header className="text-center mb-12">
           <h1 className="text-5xl md:text-6xl bg-linear-to-r from-white via-light-cyan to-secondary bg-clip-text text-transparent font-elms font-bold leading-tight mb-4">
-            Lessons
+            {category.name} Lessons
           </h1>
           <p className="text-lg text-gray-300">
             Choose a lesson to begin learning
