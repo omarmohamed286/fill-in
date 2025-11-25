@@ -1,7 +1,7 @@
 import type { JSX } from "react";
 
 type Loading = {
-  variant: string;
+  variant?: string;
 };
 const Loading = ({ variant = "1" }: Loading) => {
   const loadingVariants: Record<string, JSX.Element> = {

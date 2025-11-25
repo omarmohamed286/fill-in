@@ -6,6 +6,7 @@ import UserDataProvider from "./components/auth/UserDataProvider";
 import RedirectToHome from "./components/auth/RedirectToHome";
 import Lessons from "./pages/Lessons";
 import NotFound from "./pages/NotFound";
+import Questions from "./pages/Questions";
 
 const AppRouter = () => {
   return (
@@ -32,6 +33,10 @@ const AppRouter = () => {
           <Route
             path="/category/:categoryId"
             element={<Lessons></Lessons>}
+          ></Route>
+          <Route
+            path="/category/:categoryId/lesson/:lessonId"
+            element={<Questions></Questions>}
           ></Route>
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
