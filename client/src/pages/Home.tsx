@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import useGetCategories from "@shared/hooks/categories/useGetCategories";
 import Loading from "../components/shared/Loading";
-import ExploreIcon from "../components/home/ExploreIcon";
+import ExploreIcon from "../components/home/icons/ExploreIcon";
 const Home = () => {
   const { data, isPending, error } = useGetCategories();
   return (
@@ -36,7 +36,7 @@ const Home = () => {
               <Link
                 key={category.id}
                 to={`category/${category.id}`}
-                state={{category}}
+                state={{ category }}
                 className="group relative overflow-hidden rounded-xl bg-linear-to-br from-[#1a2332] to-primary border border-secondary/20 hover:border-secondary/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-secondary/20"
               >
                 <div className="aspect-square overflow-hidden">

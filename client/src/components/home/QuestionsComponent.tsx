@@ -4,8 +4,9 @@ import { useState } from "react";
 import QuestionsProgressBar from "./QuestionsProgressBar";
 import { useNavigate } from "react-router";
 import { CodeBlock } from "./CodeBlock";
-import CorrectAnswerIcon from "./CorrectAnswerIcon";
-import IncorrectAnswerIcon from "./IncorrectAnswerIcon";
+import CorrectAnswerIcon from "./icons/CorrectAnswerIcon";
+import IncorrectAnswerIcon from "./icons/IncorrectAnswerIcon";
+import ExternalLinkIcon from "./icons/ExternalLinkIcon";
 
 type QuestionsComponent = {
   questions: Question[];
@@ -126,6 +127,36 @@ const QuestionsComponent = ({ questions }: QuestionsComponent) => {
           </p>
         </div>
       )}
+
+      {isSubmitted && !isCorrectAnswer && currentQuestion.explanation && (
+        <div className="mb-3">
+          <p className="text-white font-medium mb-1">Explanation:</p>
+          <p className="text-light-cyan">{currentQuestion.explanation}</p>
+        </div>
+      )}
+
+      {isSubmitted &&
+        !isCorrectAnswer &&
+        currentQuestion.externalResources &&
+        currentQuestion.externalResources.length > 0 && (
+          <div className="mb-6 p-4 bg-secondary/5 border border-secondary/20 rounded-lg">
+            <h3 className="text-light-cyan font-semibold mb-2">Learn More:</h3>
+            <ul className="space-y-2">
+              {currentQuestion.externalResources.map((resource) => (
+                <li key={resource.id}>
+                  <a
+                    href={resource.url}
+                    target="_blank"
+                    className="text-secondary hover:text-light-cyan transition-colors inline-flex items-center gap-2"
+                  >
+                    <ExternalLinkIcon></ExternalLinkIcon>
+                    {resource.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
       <button
         disabled={!userAnswer}

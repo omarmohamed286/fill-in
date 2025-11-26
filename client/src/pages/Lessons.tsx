@@ -1,7 +1,7 @@
 import { useParams, Link, useLocation } from "react-router";
 import useGetLessons from "@shared/hooks/lessons/useGetLessons";
 import Loading from "../components/shared/Loading";
-import ExploreIcon from "../components/home/ExploreIcon";
+import ExploreIcon from "../components/home/icons/ExploreIcon";
 import type { Category } from "@shared/customTypes";
 const Lessons = () => {
   const { categoryId } = useParams();

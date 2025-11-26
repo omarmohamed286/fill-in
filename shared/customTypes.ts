@@ -25,7 +25,7 @@ type Question = {
   answer: string;
   explanation?: string;
   code?: string;
-  externalResources: ExternalResource[];
+  externalResources?: ExternalResource[];
 };
 
 export type { Lesson, Category, Question };

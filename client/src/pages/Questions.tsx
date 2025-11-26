@@ -2,7 +2,7 @@ import { Link, useParams, useNavigate } from "react-router";
 import useGetQuestions from "@shared/hooks/questions/useGetQuestions";
 import Loading from "../components/shared/Loading";
 import QuestionsComponent from "../components/home/QuestionsComponent";
-import ExploreIcon from "src/components/home/ExploreIcon";
+import ExploreIcon from "src/components/home/icons/ExploreIcon";
 
 const Questions = () => {
   const { categoryId, lessonId } = useParams();

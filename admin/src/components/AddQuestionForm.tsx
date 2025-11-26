@@ -13,7 +13,7 @@ const AddQuestionForm = () => {
     choices: [""],
     explanation: "",
     code: "",
-    externalResources: [{ id: crypto.randomUUID().slice(0,4), title: "", url: "" }],
+    externalResources: [],
   });
   const [lessonId, setLessonId] = useState("");
   const {
@@ -64,7 +64,7 @@ const AddQuestionForm = () => {
       choices: [""],
       explanation: "",
       code: "",
-      externalResources: [{ id: crypto.randomUUID().slice(0,4), title: "", url: "" }],
+      externalResources: [],
     });
   };
 
@@ -90,7 +90,11 @@ const AddQuestionForm = () => {
     setQuestion({ ...question, choices: newChoices });
   };
 
-  const updateResource = (index: number, field: 'title' | 'url', value: string) => {
+  const updateResource = (
+    index: number,
+    field: "title" | "url",
+    value: string
+  ) => {
     const newResources = [...(question.externalResources || [])];
     newResources[index] = { ...newResources[index], [field]: value };
     setQuestion({ ...question, externalResources: newResources });
@@ -101,7 +105,7 @@ const AddQuestionForm = () => {
       ...question,
       externalResources: [
         ...(question.externalResources || []),
-        { id: crypto.randomUUID().slice(0,4), title: "", url: "" }
+        { id: crypto.randomUUID().slice(0, 4), title: "", url: "" },
       ],
     });
   };
@@ -192,8 +196,18 @@ const AddQuestionForm = () => {
                     className="text-red-400 hover:text-red-300 transition-colors p-2"
                     aria-label="Remove choice"
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
                     </svg>
                   </button>
                 )}
@@ -254,7 +268,10 @@ const AddQuestionForm = () => {
             </div>
 
             {(question.externalResources || []).map((resource, index) => (
-              <div key={resource.id} className="flex flex-col gap-2 p-4 bg-primary/50 border border-secondary/20 rounded-lg">
+              <div
+                key={resource.id}
+                className="flex flex-col gap-2 p-4 bg-primary/50 border border-secondary/20 rounded-lg"
+              >
                 <div className="flex gap-2 items-start">
                   <div className="flex-1 flex flex-col gap-2">
                     <input
@@ -262,14 +279,18 @@ const AddQuestionForm = () => {
                       value={resource.title}
                       placeholder="Resource title"
                       className="bg-primary border border-secondary/30 rounded-md px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
-                      onChange={(e) => updateResource(index, 'title', e.target.value)}
+                      onChange={(e) =>
+                        updateResource(index, "title", e.target.value)
+                      }
                     />
                     <input
                       type="url"
                       value={resource.url}
                       placeholder="Resource URL"
                       className="bg-primary border border-secondary/30 rounded-md px-4 py-2.5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
-                      onChange={(e) => updateResource(index, 'url', e.target.value)}
+                      onChange={(e) =>
+                        updateResource(index, "url", e.target.value)
+                      }
                     />
                   </div>
                   {(question.externalResources?.length || 0) > 1 && (
@@ -279,8 +300,18 @@ const AddQuestionForm = () => {
                       className="text-red-400 hover:text-red-300 transition-colors p-2"
                       aria-label="Remove resource"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
                       </svg>
                     </button>
                   )}
@@ -301,6 +332,5 @@ const AddQuestionForm = () => {
     </div>
   );
 };
-
 
 export default AddQuestionForm;

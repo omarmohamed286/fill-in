@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import HomeIcon from "src/components/home/HomeIcon";
+import HomeIcon from "src/components/home/icons/HomeIcon";
 
 const NotFound = () => {
   return (
