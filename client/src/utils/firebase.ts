@@ -7,6 +7,9 @@ import {
   type UserCredential,
 } from "firebase/auth";
 import { auth } from "@shared/firebaseConfig";
+import { db } from "@shared/firebaseConfig";
+import { getAdditionalUserInfo } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 export const authService = {
   register: async (
@@ -27,5 +30,16 @@ export const authService = {
 
   logout: async (): Promise<void> => {
     return await signOut(auth);
+  },
+
+  addUserToDB: async (credential: UserCredential) => {
+    const userInfo = getAdditionalUserInfo(credential);
+    const { uid } = credential.user;
+    if (userInfo?.isNewUser) {
+      await setDoc(doc(db, "users", uid), {
+        id: uid,
+        completedLessons: [],
+      });
+    }
   },
 };

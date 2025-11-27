@@ -7,8 +7,8 @@ export const useGoogleSignIn = () => {
 
   return useMutation({
     mutationFn: () => authService.signInWithGoogle(),
-    onSuccess: (data) => {
-      console.log("Google sign-in successful:", data.user);
+    onSuccess: async (credential) => {
+      await authService.addUserToDB(credential);
       navigate("/");
     },
     onError: (error) => {

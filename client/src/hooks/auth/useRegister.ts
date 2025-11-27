@@ -8,8 +8,8 @@ export const useRegister = () => {
   return useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       authService.register(email, password),
-    onSuccess: (data) => {
-      console.log("Registration successful:", data.user);
+    onSuccess: async (credential) => {
+      await authService.addUserToDB(credential);
       navigate("/");
     },
     onError: (error) => {
