@@ -1,11 +1,27 @@
 import { Link } from "react-router";
 import useGetCategories from "@shared/hooks/categories/useGetCategories";
+import { useLogout } from "../hooks/auth/useLogout";
 import Loading from "../components/shared/Loading";
 import ExploreIcon from "../components/home/icons/ExploreIcon";
+import LogoutIcon from "../components/home/icons/LogoutIcon";
+
 const Home = () => {
   const { data, isPending, error } = useGetCategories();
+  const { mutate: logout, isPending: isLoggingOut } = useLogout();
+
   return (
     <main className="min-h-screen pt-20 pb-16 px-6">
+      <div className="max-w-6xl mx-auto mb-8 flex justify-end">
+        <button
+          onClick={() => logout()}
+          disabled={isLoggingOut}
+          className="flex items-center gap-2 bg-primary border border-secondary/30 text-white font-medium py-2 px-6 rounded-lg hover:border-secondary hover:bg-secondary/10 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <LogoutIcon></LogoutIcon>
+          {isLoggingOut ? "Logging out..." : "Logout"}
+        </button>
+      </div>
+
       <header className="text-center mb-16">
         <h1 className="text-6xl md:text-7xl bg-linear-to-r from-white via-light-cyan to-secondary bg-clip-text text-transparent font-elms font-bold leading-tight mb-4">
           Start Learning
