@@ -3,12 +3,22 @@ import useGetLessons from "@shared/hooks/lessons/useGetLessons";
 import Loading from "../components/shared/Loading";
 import ExploreIcon from "../components/home/icons/ExploreIcon";
 import type { Category } from "@shared/customTypes";
+import useGetCompletedLessons from "src/hooks/home/useGetCompletedLessons";
+import clsx from "clsx";
+import CompletedIcon from "src/components/home/icons/CompletedIcon";
+
 const Lessons = () => {
   const { categoryId } = useParams();
   const { data, isPending, error } = useGetLessons(categoryId);
   const location = useLocation();
   const locationState = location.state as { category: Category };
   const { category } = locationState;
+  const { data: completedLessons, isPending: isCompletedLessonsPending } =
+    useGetCompletedLessons();
+
+  const isLessonCompleted = (lessonId: string) => {
+    return completedLessons?.includes(lessonId) || false;
+  };
 
   return (
     <main className="min-h-screen pt-20 pb-16 px-6">
@@ -30,7 +40,9 @@ const Lessons = () => {
             Choose a lesson to begin learning
           </p>
         </header>
-        {isPending && <Loading variant="2"></Loading>}
+        {(isPending || isCompletedLessonsPending) && (
+          <Loading variant="2"></Loading>
+        )}
 
         {error && (
           <div className="text-center py-20">
@@ -46,32 +58,75 @@ const Lessons = () => {
 
         {data && data.length > 0 && (
           <section className="space-y-4">
-            {data.map((lesson) => (
-              <Link
-                key={lesson.id}
-                to={`/category/${categoryId}/lesson/${lesson.id}`}
-                className="group block bg-linear-to-br from-[#1a2332] to-primary border border-secondary/20 hover:border-secondary/50 rounded-lg p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-secondary/10"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-6">
-                    <div className="shrink-0 w-12 h-12 rounded-full bg-secondary/10 border border-secondary/30 flex items-center justify-center group-hover:bg-secondary/20 transition-colors duration-300">
-                      <span className="text-secondary font-bold text-lg">
-                        {lesson.name.split(" ")[1]}
-                      </span>
-                    </div>
+            {data.map((lesson) => {
+              const completed = isLessonCompleted(lesson.id);
 
-                    <div>
-                      <h3 className="text-xl font-bold text-white group-hover:text-secondary transition-colors duration-300">
-                        {lesson.name}
-                      </h3>
+              return (
+                <Link
+                  key={lesson.id}
+                  to={`/category/${categoryId}/lesson/${lesson.id}`}
+                  className={clsx(
+                    "group block bg-linear-to-br from-[#1a2332] to-primary border rounded-lg p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl",
+                    completed &&
+                      "border-green-500/30 hover:border-green-500/50 hover:shadow-green-500/10",
+                    !completed &&
+                      "border-secondary/20 hover:border-secondary/50 hover:shadow-secondary/10"
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-6">
+                      <div
+                        className={clsx(
+                          "shrink-0 w-12 h-12 rounded-full border flex items-center justify-center transition-colors duration-300",
+                          completed &&
+                            "bg-green-500/10 border-green-500/30 group-hover:bg-green-500/20",
+                          !completed &&
+                            "bg-secondary/10 border-secondary/30 group-hover:bg-secondary/20"
+                        )}
+                      >
+                        {completed ? (
+                          <CompletedIcon></CompletedIcon>
+                        ) : (
+                          <span className="text-secondary font-bold text-lg">
+                            {lesson.name.split(" ")[1]}
+                          </span>
+                        )}
+                      </div>
+
+                      <div>
+                        <div className="flex items-center gap-3">
+                          <h3
+                            className={clsx(
+                              "text-xl font-bold transition-colors duration-300",
+                              completed &&
+                                "text-white group-hover:text-green-400",
+                              !completed &&
+                                "text-white group-hover:text-secondary"
+                            )}
+                          >
+                            {lesson.name}
+                          </h3>
+                          {completed && (
+                            <span className="text-xs font-medium text-green-400 bg-green-500/10 px-2 py-1 rounded-full">
+                              Completed
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className={clsx(
+                        "transition-colors",
+                        completed && "text-green-400",
+                        !completed && "text-light-cyan"
+                      )}
+                    >
+                      <ExploreIcon></ExploreIcon>
                     </div>
                   </div>
-                  <div className="text-light-cyan scale-200">
-                    <ExploreIcon></ExploreIcon>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </section>
         )}
       </div>

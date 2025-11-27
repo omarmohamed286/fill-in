@@ -25,6 +25,9 @@ export const authService = {
 
   signInWithGoogle: async (): Promise<UserCredential> => {
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({
+      prompt: "select_account",
+    });
     return await signInWithPopup(auth, provider);
   },
 
