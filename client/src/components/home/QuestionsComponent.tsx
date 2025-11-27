@@ -2,11 +2,12 @@ import type { Question } from "@shared/customTypes";
 import clsx from "clsx";
 import { useState } from "react";
 import QuestionsProgressBar from "./QuestionsProgressBar";
-import { useNavigate } from "react-router";
+import { useParams } from "react-router";
 import { CodeBlock } from "./CodeBlock";
 import CorrectAnswerIcon from "./icons/CorrectAnswerIcon";
 import IncorrectAnswerIcon from "./icons/IncorrectAnswerIcon";
 import ExternalLinkIcon from "./icons/ExternalLinkIcon";
+import useAddCompletedLesson from "../../hooks/home/useAddCompletedLesson";
 
 type QuestionsComponent = {
   questions: Question[];
@@ -19,7 +20,9 @@ const QuestionsComponent = ({ questions }: QuestionsComponent) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const isLastQuestion = currentQuestionIndex + 1 == questions.length;
   const isCorrectAnswer = userAnswer == currentQuestion.answer;
-  const navigate = useNavigate();
+  const { lessonId } = useParams();
+
+  const { mutate } = useAddCompletedLesson();
 
   const handleAnswerClicked = (answer: string) => {
     if (!isSubmitted) {
@@ -36,7 +39,7 @@ const QuestionsComponent = ({ questions }: QuestionsComponent) => {
       setUserAnswer("");
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      navigate(-1);
+      mutate(lessonId);
     }
   };
 
