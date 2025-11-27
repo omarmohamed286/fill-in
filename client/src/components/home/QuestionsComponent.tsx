@@ -22,7 +22,7 @@ const QuestionsComponent = ({ questions }: QuestionsComponent) => {
   const isCorrectAnswer = userAnswer == currentQuestion.answer;
   const { lessonId } = useParams();
 
-  const { mutate } = useAddCompletedLesson();
+  const { mutate, isPending } = useAddCompletedLesson();
 
   const handleAnswerClicked = (answer: string) => {
     if (!isSubmitted) {
@@ -45,7 +45,7 @@ const QuestionsComponent = ({ questions }: QuestionsComponent) => {
 
   const getButtonLabel = () => {
     if (isLastQuestion && isSubmitted) {
-      return "Finish";
+      return isPending ? "Redirecting to Lessons..." : "Finish";
     }
     if (!isSubmitted) {
       return "Submit";
