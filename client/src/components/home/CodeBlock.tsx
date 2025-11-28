@@ -5,7 +5,6 @@ import { IconCheck, IconCopy } from "@tabler/icons-react";
 
 type CodeBlockProps = {
   language: string;
-  filename: string;
   highlightLines?: number[];
 } & (
   | {
@@ -25,7 +24,6 @@ type CodeBlockProps = {
 
 export const CodeBlock = ({
   language,
-  filename,
   code,
   highlightLines = [],
   tabs = [],
@@ -72,9 +70,8 @@ export const CodeBlock = ({
             ))}
           </div>
         )}
-        {!tabsExist && filename && (
-          <div className="flex justify-between items-center py-2">
-            <div className="text-xs text-zinc-400">{filename}</div>
+        {!tabsExist && (
+          <div className="flex justify-between items-center py-2 ml-auto">
             <button
               onClick={copyToClipboard}
               className="flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-200 transition-colors font-sans"
