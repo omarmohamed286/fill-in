@@ -165,7 +165,7 @@ const QuestionsComponent = ({ questions }: QuestionsComponent) => {
             setShowChat(true);
           }}
         >
-          Discuss it with an LLM
+          Discuss it with your AI teacher
         </button>
       )}
 
