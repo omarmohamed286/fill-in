@@ -8,6 +8,7 @@ import CorrectAnswerIcon from "./icons/CorrectAnswerIcon";
 import IncorrectAnswerIcon from "./icons/IncorrectAnswerIcon";
 import ExternalLinkIcon from "./icons/ExternalLinkIcon";
 import useAddCompletedLesson from "../../hooks/home/useAddCompletedLesson";
+import GeminiChat from "../gemini/GeminiChat";
 
 type QuestionsComponent = {
   questions: Question[];
@@ -21,8 +22,8 @@ const QuestionsComponent = ({ questions }: QuestionsComponent) => {
   const isLastQuestion = currentQuestionIndex + 1 == questions.length;
   const isCorrectAnswer = userAnswer == currentQuestion.answer;
   const { lessonId } = useParams();
-
   const { mutate, isPending } = useAddCompletedLesson();
+  const [showChat, setShowChat] = useState(false);
 
   const handleAnswerClicked = (answer: string) => {
     if (!isSubmitted) {
@@ -64,11 +65,7 @@ const QuestionsComponent = ({ questions }: QuestionsComponent) => {
         <h1 className="text-2xl md:text-3xl font-bold text-white leading-relaxed">
           {currentQuestion.title}
           {currentQuestion.code && (
-            <CodeBlock
-              code={currentQuestion.code}
-              language="tsx"
-              filename="App.tsx"
-            ></CodeBlock>
+            <CodeBlock code={currentQuestion.code} language="tsx"></CodeBlock>
           )}
         </h1>
       </header>
@@ -161,6 +158,17 @@ const QuestionsComponent = ({ questions }: QuestionsComponent) => {
           </div>
         )}
 
+      {isSubmitted && !isCorrectAnswer && (
+        <button
+          className="underline text-secondary my-5"
+          onClick={() => {
+            setShowChat(true);
+          }}
+        >
+          Discuss it with an LLM
+        </button>
+      )}
+
       <button
         disabled={!userAnswer}
         onClick={handleSubmitClicked}
@@ -168,6 +176,7 @@ const QuestionsComponent = ({ questions }: QuestionsComponent) => {
       >
         {getButtonLabel()}
       </button>
+      <GeminiChat showChat={showChat} setShowChat={setShowChat}></GeminiChat>
     </article>
   );
 };

@@ -126,10 +126,10 @@ export default function Login() {
               <GoogleLogo></GoogleLogo>
               <span className="text-sm font-medium text-white">Google</span>
             </button>
-            {googleError && (
-              <p className="text-rose-400 mt-2">{googleError.message}</p>
-            )}
           </div>
+          {googleError && (
+            <p className="text-rose-400 my-2">{googleError.message}</p>
+          )}
           <p className="text-center text-sm text-white/60 mt-6">
             Don't have an account?{" "}
             <Link
